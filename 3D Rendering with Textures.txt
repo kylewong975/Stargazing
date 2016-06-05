@@ -1,0 +1,199 @@
+wait(1/30)
+
+--[[local cServ = game:GetService("ControllerService")
+repeat wait(1/30) cServ = game:GetService("ControllerService") until cServ
+cServ:ClearAllChildren()]]--
+
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+local gui = script.Parent.RenderArea
+local numStars = 10
+local range = 200
+local nyanrange = 25
+
+local camera = CFrame.new()
+local fovMult = 1 / math.tan(math.rad(80)/2)
+
+function project(pos)
+	local dif = camera:pointToObjectSpace(pos)
+	return
+		dif.x/-dif.z * fovMult * gui.AbsoluteSize.y/gui.AbsoluteSize.x,
+		dif.y/-dif.z * fovMult,
+		-dif.z
+end
+
+local points = {}
+for i = 1, numStars*50 do
+	local frame = Instance.new("ImageLabel")
+	frame.BackgroundColor3 = Color3.new(0, 1, 1)
+	frame.BorderSizePixel = 0
+	frame.Parent = gui
+	frame.BackgroundTransparency = 1
+	frame.Image = "http://www.roblox.com/asset/?id=100251530"
+
+	points[#points + 1] = {
+		frame = frame;
+		pos = Vector3.new(
+			math.random()*range - range/2,
+			math.random()*range - range/2,
+			math.random()*range - range/2
+		)
+	}
+end
+
+for i = 1, numStars*20 do
+	local frame = Instance.new("ImageLabel")
+	frame.BackgroundColor3 = Color3.new(0, 1, 1)
+	frame.BorderSizePixel = 0
+	frame.Parent = gui
+	frame.BackgroundTransparency = 1
+	frame.Image = "http://www.roblox.com/asset/?id=70645788"
+
+	points[#points + 1] = {
+		frame = frame;
+		pos = Vector3.new(
+			math.random()*range - range/2,
+			math.random()*range - range/2,
+			math.random()*range - range/2
+		)
+	}
+end
+
+for i = 1, numStars*100 do
+	local frame = Instance.new("ImageLabel")
+	frame.BackgroundColor3 = Color3.new(0, 1, 1)
+	frame.BorderSizePixel = 0
+	frame.Parent = gui
+	frame.BackgroundTransparency = 1
+	frame.Image = "http://www.roblox.com/asset/?id=9725574"
+
+	points[#points + 1] = {
+		frame = frame;
+		pos = Vector3.new(
+			math.random()*range - range/2,
+			math.random()*range - range/2,
+			math.random()*range - range/2
+		)
+	}
+end
+
+for i = 1, numStars*80 do
+	local frame = Instance.new("ImageLabel")
+	frame.BackgroundColor3 = Color3.new(0, 1, 1)
+	frame.BorderSizePixel = 0
+	frame.Parent = gui
+	frame.BackgroundTransparency = 1
+	frame.Image = "http://www.roblox.com/asset/?id=12092433"
+
+	points[#points + 1] = {
+		frame = frame;
+		pos = Vector3.new(
+			math.random()*range - range/2,
+			math.random()*range - range/2,
+			math.random()*range - range/2
+		)
+	}
+end
+
+for i = 1, numStars*100 do
+	local frame = Instance.new("ImageLabel")
+	frame.BackgroundColor3 = Color3.new(0, 1, 1)
+	frame.BorderSizePixel = 0
+	frame.Parent = gui
+	frame.BackgroundTransparency = 1
+	frame.Image = "http://www.roblox.com/asset/?id=161272574"
+
+	points[#points + 1] = {
+		frame = frame;
+		pos = Vector3.new(
+			math.random()*range - range/2,
+			math.random()*range - range/2,
+			math.random()*range - range/2
+		)
+	}
+end
+
+for i = 1, numStars*70 do
+	local frame = Instance.new("ImageLabel")
+	frame.BackgroundColor3 = Color3.new(0, 1, 1)
+	frame.BorderSizePixel = 0
+	frame.Parent = gui
+	frame.BackgroundTransparency = 1
+	frame.Image = "http://www.roblox.com/asset/?id=125545848"
+
+	points[#points + 1] = {
+		frame = frame;
+		pos = Vector3.new(
+			math.random()*range - range/2,
+			math.random()*range - range/2,
+			math.random()*range - range/2
+		)
+	}
+end
+
+local nyan = Instance.new("ImageLabel")
+nyan.BackgroundTransparency = 1
+nyan.Parent = gui
+nyan.Image = "http://www.roblox.com/asset/?id=12668227"
+points["nyan"] = {
+	frame = nyan;
+	pos = Vector3.new(0, 0, 0)
+}
+
+local keysDown = {}
+mouse.KeyDown:connect(function(key) keysDown[key:lower()] = true end)
+mouse.KeyUp:connect(function(key) keysDown[key:lower()] = false end)
+
+local moveSpeed = 0
+local rotSpeedx = 0
+local rotSpeedy = 0
+local rotSpeedz = 0
+local nyany = 0
+
+game:GetService("RunService").Heartbeat:connect(function(delta)
+	nyany = nyany + 0.25
+	moveSpeed = moveSpeed * 0.93
+	rotSpeedx = rotSpeedx * 0.9
+	rotSpeedy = rotSpeedy * 0.9
+	rotSpeedz = rotSpeedz * 0.9
+	
+	if keysDown["w"] then
+		moveSpeed = -5
+	end
+	if keysDown["s"] then
+		moveSpeed = 5
+	end
+	if keysDown["q"] then
+		rotSpeedz = -1
+	end
+	if keysDown["e"] then
+		rotSpeedz = 1
+	end
+ 	if keysDown["a"] then
+		rotSpeedy = 1
+	end
+	if keysDown["d"] then
+		rotSpeedy = -1
+	end
+	if keysDown["r"] then
+		rotSpeedx = -1
+	end
+	if keysDown["f"] then
+		rotSpeedx = 1
+	end
+	camera = camera * CFrame.new(0, 0, delta*moveSpeed)
+	camera = camera * CFrame.Angles(delta*rotSpeedx, delta*rotSpeedy, delta*rotSpeedz)
+
+	for _, point in pairs(points) do
+		local x, y, z = project(point.pos)
+		if z > 0 then
+			point.frame.Visible = true
+			point.frame.Size = UDim2.new(0.1/z * gui.AbsoluteSize.y/gui.AbsoluteSize.x, 0, 0.1/z, 0)
+			point.frame.Position = UDim2.new(0.5 + x/2, 0, 0.5 + y/2, 0)
+			point.frame.BackgroundColor3 = Color3.new(0, (math.random(25)+75)/100, (math.random(25)+75)/100)
+		else
+			point.frame.Visible = false
+		end
+	end
+	points.nyan.pos = Vector3.new(math.tan(nyany)*2, math.sin(nyany), 0)
+end)
